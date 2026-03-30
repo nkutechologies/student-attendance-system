@@ -1,35 +1,31 @@
--- DROP TABLE IF EXISTS statements
-DROP TABLE IF EXISTS Report CASCADE;
-DROP TABLE IF EXISTS Attendance CASCADE;
-DROP TABLE IF EXISTS "User" CASCADE;
+DROP TABLE IF EXISTS issued_books CASCADE;
+DROP TABLE IF EXISTS members CASCADE;
+DROP TABLE IF EXISTS books CASCADE;
 
--- CREATE TABLE statements
-CREATE TABLE "User" (
-    UserID SERIAL PRIMARY KEY,
-    Name VARCHAR(255) NOT NULL,
-    Role VARCHAR(50) NOT NULL CHECK (Role IN ('Teacher', 'Student', 'Admin')),
-    Email VARCHAR(255) UNIQUE NOT NULL,
-    Password VARCHAR(255) NOT NULL
+CREATE TABLE books (
+    isbn VARCHAR(20) PRIMARY KEY NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    status VARCHAR(50) DEFAULT 'Available'
 );
 
-CREATE TABLE Attendance (
-    AttendanceID SERIAL PRIMARY KEY,
-    ClassID INTEGER NOT NULL,
-    UserID INTEGER NOT NULL,
-    Date DATE NOT NULL,
-    Status VARCHAR(10) NOT NULL CHECK (Status IN ('Present', 'Absent')),
-    FOREIGN KEY (UserID) REFERENCES "User"(UserID) ON DELETE CASCADE
+CREATE TABLE members (
+    member_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    phone VARCHAR(15) NOT NULL,
+    registration_date DATE DEFAULT CURRENT_DATE
 );
 
-CREATE TABLE Report (
-    ReportID SERIAL PRIMARY KEY,
-    ClassID INTEGER NOT NULL,
-    Month INTEGER NOT NULL CHECK (Month BETWEEN 1 AND 12),
-    Year INTEGER NOT NULL,
-    AttendanceData JSONB NOT NULL
+CREATE TABLE issued_books (
+    id SERIAL PRIMARY KEY,
+    member_id INTEGER REFERENCES members(member_id) ON DELETE CASCADE,
+    isbn VARCHAR(20) REFERENCES books(isbn) ON DELETE CASCADE,
+    issue_date DATE NOT NULL,
+    due_date DATE NOT NULL,
+    return_date DATE
 );
 
--- CREATE INDEX statements
-CREATE INDEX idx_user_email ON "User"(Email);
-CREATE INDEX idx_attendance_userid ON Attendance(UserID);
-CREATE INDEX idx_report_month_year ON Report(Month, Year);
+CREATE INDEX idx_books_title ON books(title);
+CREATE INDEX idx_members_email ON members(email);

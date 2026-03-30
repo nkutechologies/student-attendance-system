@@ -1,24 +1,18 @@
--- Seed data for User table
-INSERT INTO "User" (Name, Role, Email, Password) VALUES
-('Alice Johnson', 'Teacher', 'alice.johnson@example.com', 'password1'),
-('Bob Smith', 'Student', 'bob.smith@example.com', 'password2'),
-('Charlie Brown', 'Admin', 'charlie.brown@example.com', 'password3'),
-('David Wilson', 'Student', 'david.wilson@example.com', 'password4'),
-('Eve Davis', 'Teacher', 'eve.davis@example.com', 'password5');
+INSERT INTO books (isbn, title, author, category, status) VALUES
+('978-3-16-148410-0', 'The Great Gatsby', 'F. Scott Fitzgerald', 'Classic', 'Available'),
+('978-1-56619-909-4', '1984', 'George Orwell', 'Dystopian', 'Available'),
+('978-0-7432-7356-5', 'To Kill a Mockingbird', 'Harper Lee', 'Classic', 'Issued'),
+('978-0-452-28423-4', 'Moby Dick', 'Herman Melville', 'Adventure', 'Available'),
+('978-0-06-112008-4', 'Pride and Prejudice', 'Jane Austen', 'Romance', 'Available');
 
--- Seed data for Attendance table
-INSERT INTO Attendance (ClassID, UserID, Date, Status) VALUES
-(1, 1, '2023-10-01', 'Present'),
-(1, 2, '2023-10-01', 'Absent'),
-(1, 3, '2023-10-01', 'Present'),
-(1, 4, '2023-10-01', 'Present'),
-(1, 5, '2023-10-01', 'Absent'),
-(1, 1, '2023-10-02', 'Present'),
-(1, 2, '2023-10-02', 'Present'),
-(1, 3, '2023-10-02', 'Absent'),
-(1, 4, '2023-10-02', 'Present'),
-(1, 5, '2023-10-02', 'Absent');
+INSERT INTO members (name, email, phone) VALUES
+('Alice Johnson', 'alice@example.com', '555-1234'),
+('Bob Smith', 'bob@example.com', '555-5678'),
+('Carol White', 'carol@example.com', '555-8765'),
+('Dave Brown', 'dave@example.com', '555-4321'),
+('Eve Davis', 'eve@example.com', '555-0987');
 
--- Seed data for Report table
-INSERT INTO Report (ClassID, Month, Year, AttendanceData) VALUES
-(1, 10, 2023, '{"attendance": [{"userId": "2", "status": "Present"}, {"userId": "3", "status": "Absent"}]}');
+INSERT INTO issued_books (member_id, isbn, issue_date, due_date) VALUES
+(1, '978-3-16-148410-0', '2023-10-01', '2023-10-15'),
+(2, '978-1-56619-909-4', '2023-10-01', '2023-10-15'),
+(3, '978-0-7432-7356-5', '2023-10-01', '2023-10-15');

@@ -2,42 +2,40 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { connectDB } = require('./db');
+const studentsRoutes = require('./routes/students');
+const attendanceRoutes = require('./routes/attendance');
+const reportsRoutes = require('./routes/reports');
+const teachersRoutes = require('./routes/teachers');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
 connectDB();
 
-// Mount API routes
-app.use('/api/students', require('./routes/students'));
-app.use('/api/attendance', require('./routes/attendance'));
-app.use('/api/reports', require('./routes/reports'));
-app.use('/api/teachers', require('./routes/teachers'));
+app.use('/api/students', studentsRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/reports', reportsRoutes);
+app.use('/api/teachers', teachersRoutes);
 
-// Health check route
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date() });
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// SPA fallback
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
