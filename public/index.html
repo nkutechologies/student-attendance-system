@@ -3,70 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Attendance Management System</title>
+    <title>Personal Expense Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-100">
     <div class="flex flex-col min-h-screen">
-        <header class="bg-blue-600 p-4 text-white">
-            <h1 class="text-xl font-bold">Attendance Management System</h1>
+        <header class="flex items-center justify-between p-4 bg-blue-600 text-white">
+            <h1 class="text-xl font-bold">Expense Tracker</h1>
+            <nav>
+                <button id="dashboardTab" class="px-4 py-2">Dashboard</button>
+                <button id="featuresTab" class="px-4 py-2">Features</button>
+                <button id="dataManagementTab" class="px-4 py-2">Data Management</button>
+                <button id="reportsTab" class="px-4 py-2">Reports</button>
+            </nav>
         </header>
-        <nav class="flex justify-around p-4 bg-white shadow">
-            <button id="dashboard-tab" class="tab-button p-2 text-blue-600 font-semibold">Dashboard</button>
-            <button id="students-tab" class="tab-button p-2 text-gray-700">Students</button>
-            <button id="teachers-tab" class="tab-button p-2 text-gray-700">Teachers</button>
-            <button id="reports-tab" class="tab-button p-2 text-gray-700">Reports</button>
-        </nav>
-        <main class="flex-1 p-4">
-            <div id="dashboard" class="tab-content">
-                <h2 class="text-2xl font-bold mb-4">Dashboard</h2>
+        <main class="flex-grow p-4">
+            <div id="dashboard" class="tab-content hidden">
+                <h2 class="text-xl font-bold">Dashboard</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <h3 class="font-semibold">Total Records:</h3>
-                        <p id="totalRecords" class="text-xl font-bold">0</p>
+                    <div class="bg-white p-4 rounded shadow">
+                        <h3 class="font-bold text-blue-500">Total Records</h3>
+                        <p id="totalRecords" class="text-lg"></p>
                     </div>
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <h3 class="font-semibold">Present Count:</h3>
-                        <p id="presentCount" class="text-xl font-bold">0</p>
+                    <div class="bg-white p-4 rounded shadow">
+                        <h3 class="font-bold text-green-500">Present Count</h3>
+                        <p id="presentCount" class="text-lg"></p>
                     </div>
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <h3 class="font-semibold">Absent Count:</h3>
-                        <p id="absentCount" class="text-xl font-bold">0</p>
+                    <div class="bg-white p-4 rounded shadow">
+                        <h3 class="font-bold text-red-500">Absent Count</h3>
+                        <p id="absentCount" class="text-lg"></p>
                     </div>
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <h3 class="font-semibold">Attendance Rate:</h3>
-                        <p id="attendanceRate" class="text-xl font-bold">0%</p>
+                    <div class="bg-white p-4 rounded shadow">
+                        <h3 class="font-bold">Attendance Rate</h3>
+                        <p id="attendanceRate" class="text-lg"></p>
                     </div>
                 </div>
             </div>
-            <div id="students" class="tab-content hidden">
-                <h2 class="text-2xl font-bold">Students</h2>
-                <table class="min-w-full divide-y divide-gray-300">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="p-2">ID</th>
-                            <th class="p-2">Name</th>
-                            <th class="p-2">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studentsTable" class="bg-white divide-y divide-gray-200">
-                        <!-- Student Rows Here -->
-                    </tbody>
-                </table>
+            <div id="features" class="tab-content hidden">
+                <h2 class="text-xl font-bold">Features</h2>
+                <p>Details about features will be here.</p>
             </div>
-            <div id="teachers" class="tab-content hidden">
-                <h2 class="text-2xl font-bold">Teachers</h2>
-                <!-- Teacher Data Here -->
+            <div id="dataManagement" class="tab-content hidden">
+                <h2 class="text-xl font-bold">Data Management</h2>
+                <p>Data management features will be here.</p>
             </div>
             <div id="reports" class="tab-content hidden">
-                <h2 class="text-2xl font-bold">Reports</h2>
-                <!-- Report Filters and Data Here -->
+                <h2 class="text-xl font-bold">Reports</h2>
+                <p>Reports generation features will be here.</p>
             </div>
         </main>
-        <footer class="bg-blue-600 p-4 text-white text-center">
-            <p>&copy; 2023 School Attendance System</p>
-        </footer>
     </div>
     <script src="/js/app.js"></script>
 </body>
