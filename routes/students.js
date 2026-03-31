@@ -1,24 +1,24 @@
 const express = require('express');
-const { pool } = require('../db');
 const router = express.Router();
+const { pool } = require('../db');
 
-// GET /api/students - List all students
+// GET /api/students
 router.get('/', async (req, res, next) => {
     try {
-        const result = await pool.query('SELECT * FROM students;');
+        const result = await pool.query(`SELECT * FROM users WHERE role = 'Student'`);
         res.json(result.rows);
     } catch (err) {
         next(err);
     }
 });
 
-// GET /api/students/:id - Get student by ID
+// GET /api/students/:id
 router.get('/:id', async (req, res, next) => {
-    const { id } = req.params;
     try {
-        const result = await pool.query('SELECT * FROM students WHERE student_id = $1;', [id]);
+        const { id } = req.params;
+        const result = await pool.query(`SELECT * FROM users WHERE user_id = $1 AND role = 'Student'`, [id]);
         if (result.rows.length === 0) {
-            return res.status(404).json({ message: 'Student not found' });
+            return res.status(404).json({ error: 'Student not found' });
         }
         res.json(result.rows[0]);
     } catch (err) {
@@ -26,29 +26,30 @@ router.get('/:id', async (req, res, next) => {
     }
 });
 
-// POST /api/students - Create a new student
+// POST /api/students
 router.post('/', async (req, res, next) => {
-    const { name, email } = req.body;
-    if (!name || !email) {
-        return res.status(400).json({ message: 'Missing fields' });
+    const { username, password } = req.body;
+    if (!username || !password) {
+        return res.status(400).json({ error: 'Missing fields' });
     }
     try {
-        const result = await pool.query('INSERT INTO students (name, email) VALUES ($1, $2) RETURNING *;', [name, email]);
+        const result = await pool.query(`INSERT INTO users (username, password, role) 
+                                           VALUES ($1, $2, 'Student') RETURNING *`, [username, password]);
         res.status(201).json(result.rows[0]);
     } catch (err) {
         next(err);
     }
 });
 
-// DELETE /api/students/:id - Delete a student
+// DELETE /api/students/:id
 router.delete('/:id', async (req, res, next) => {
-    const { id } = req.params;
     try {
-        const result = await pool.query('DELETE FROM students WHERE student_id = $1 RETURNING *;', [id]);
-        if (result.rowCount === 0) {
-            return res.status(404).json({ message: 'Student not found' });
+        const { id } = req.params;
+        const result = await pool.query(`DELETE FROM users WHERE user_id = $1 AND role = 'Student' RETURNING *`, [id]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Student not found' });
         }
-        res.json({ message: 'Student deleted successfully' });
+        res.json({ message: 'Student deleted' });
     } catch (err) {
         next(err);
     }

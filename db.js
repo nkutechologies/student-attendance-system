@@ -1,20 +1,19 @@
 const { Pool } = require('pg');
-require('dotenv').config();
+const dotenv = require('dotenv');
+dotenv.config();
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
+    ssl: { rejectUnauthorized: false }
 });
 
 const connectDB = async () => {
     try {
         const client = await pool.connect();
-        console.log('Database connected successfully');
+        console.log('Connected to the database');
         client.release();
     } catch (err) {
-        console.error('Database connection error', err);
+        console.error('Database connection error', err.stack);
     }
 };
 

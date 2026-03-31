@@ -3,59 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Book Management System</title>
+    <title>School Attendance Management System</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-100">
-    <div class="container mx-auto p-5">
-        <h1 class="text-3xl font-bold mb-5 text-blue-600">Library Book Management System</h1>
-        <nav>
-            <div class="flex space-x-4">
-                <button id="tab-dashboard" class="tab-btn py-2 px-4 rounded bg-blue-600 text-white">Dashboard</button>
-                <button id="tab-books" class="tab-btn py-2 px-4 rounded bg-blue-600 text-white">Books</button>
-                <button id="tab-members" class="tab-btn py-2 px-4 rounded bg-blue-600 text-white">Members</button>
-                <button id="tab-reports" class="tab-btn py-2 px-4 rounded bg-blue-600 text-white">Reports</button>
-            </div>
+    <div class="flex flex-col min-h-screen">
+        <header class="bg-blue-600 p-4 text-white">
+            <h1 class="text-xl font-bold">Attendance Management System</h1>
+        </header>
+        <nav class="flex justify-around p-4 bg-white shadow">
+            <button id="dashboard-tab" class="tab-button p-2 text-blue-600 font-semibold">Dashboard</button>
+            <button id="students-tab" class="tab-button p-2 text-gray-700">Students</button>
+            <button id="teachers-tab" class="tab-button p-2 text-gray-700">Teachers</button>
+            <button id="reports-tab" class="tab-button p-2 text-gray-700">Reports</button>
         </nav>
-
-        <div id="content" class="mt-5">
-            <div id="dashboard" class="tab-content hidden">
-                <h2 class="text-xl font-semibold text-blue-600">Dashboard</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
-                    <div class="bg-white rounded-lg shadow p-4">
-                        <h3 class="text-lg font-bold">Total Records</h3>
-                        <p id="totalRecords" class="text-2xl text-green-600">--</p>
+        <main class="flex-1 p-4">
+            <div id="dashboard" class="tab-content">
+                <h2 class="text-2xl font-bold mb-4">Dashboard</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-lg shadow-md">
+                        <h3 class="font-semibold">Total Records:</h3>
+                        <p id="totalRecords" class="text-xl font-bold">0</p>
                     </div>
-                    <div class="bg-white rounded-lg shadow p-4">
-                        <h3 class="text-lg font-bold">Present</h3>
-                        <p id="presentCount" class="text-2xl text-green-600">--</p>
+                    <div class="bg-white p-4 rounded-lg shadow-md">
+                        <h3 class="font-semibold">Present Count:</h3>
+                        <p id="presentCount" class="text-xl font-bold">0</p>
                     </div>
-                    <div class="bg-white rounded-lg shadow p-4">
-                        <h3 class="text-lg font-bold">Absent</h3>
-                        <p id="absentCount" class="text-2xl text-red-600">--</p>
+                    <div class="bg-white p-4 rounded-lg shadow-md">
+                        <h3 class="font-semibold">Absent Count:</h3>
+                        <p id="absentCount" class="text-xl font-bold">0</p>
                     </div>
-                    <div class="bg-white rounded-lg shadow p-4">
-                        <h3 class="text-lg font-bold">Attendance Rate</h3>
-                        <p id="attendanceRate" class="text-2xl text-green-600">--</p>
+                    <div class="bg-white p-4 rounded-lg shadow-md">
+                        <h3 class="font-semibold">Attendance Rate:</h3>
+                        <p id="attendanceRate" class="text-xl font-bold">0%</p>
                     </div>
                 </div>
             </div>
-
-            <div id="books" class="tab-content hidden">
-                <h2 class="text-xl font-semibold text-blue-600">Books Management</h2>
-                <!-- Books management UI to be implemented -->
+            <div id="students" class="tab-content hidden">
+                <h2 class="text-2xl font-bold">Students</h2>
+                <table class="min-w-full divide-y divide-gray-300">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="p-2">ID</th>
+                            <th class="p-2">Name</th>
+                            <th class="p-2">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTable" class="bg-white divide-y divide-gray-200">
+                        <!-- Student Rows Here -->
+                    </tbody>
+                </table>
             </div>
-
-            <div id="members" class="tab-content hidden">
-                <h2 class="text-xl font-semibold text-blue-600">Members Management</h2>
-                <!-- Members management UI to be implemented -->
+            <div id="teachers" class="tab-content hidden">
+                <h2 class="text-2xl font-bold">Teachers</h2>
+                <!-- Teacher Data Here -->
             </div>
-
             <div id="reports" class="tab-content hidden">
-                <h2 class="text-xl font-semibold text-blue-600">Reports</h2>
-                <!-- Reports UI to be implemented -->
+                <h2 class="text-2xl font-bold">Reports</h2>
+                <!-- Report Filters and Data Here -->
             </div>
-        </div>
+        </main>
+        <footer class="bg-blue-600 p-4 text-white text-center">
+            <p>&copy; 2023 School Attendance System</p>
+        </footer>
     </div>
     <script src="/js/app.js"></script>
 </body>

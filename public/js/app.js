@@ -1,42 +1,49 @@
-document.addEventListener('DOMContentLoaded', function() {
-    loadDashboardData();
+document.addEventListener('DOMContentLoaded', () => {
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
 
-    const tabs = document.querySelectorAll('.tab-btn');
-    const content = document.querySelectorAll('.tab-content');
+    function fetchAttendanceStats() {
+        fetch('/api/attendance/stats')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('totalRecords').innerText = data.totalRecords;
+                document.getElementById('presentCount').innerText = data.presentCount;
+                document.getElementById('absentCount').innerText = data.absentCount;
+                document.getElementById('attendanceRate').innerText = data.attendanceRate + '%';
+            })
+            .catch(console.error);
+    }
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            tabs.forEach(t => t.classList.remove('bg-blue-700')); // Deselect all tabs
-            content.forEach(c => c.classList.add('hidden')); // Hide all content
-            tab.classList.add('bg-blue-700'); // Highlight selected tab
-            const selectedTab = tab.id.replace('tab-', '');
-            document.getElementById(selectedTab).classList.remove('hidden'); // Show selected content
+    function fetchStudents() {
+        fetch('/api/students')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('studentsTable');
+                table.innerHTML = '';
+                data.forEach(student => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td class='p-2'>${escapeHtml(student.id)}</td><td class='p-2'>${escapeHtml(student.name)}</td><td class='p-2'>${escapeHtml(student.status)}</td>`;
+                    table.appendChild(row);
+                });
+            })
+            .catch(console.error);
+    }
+
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', () => {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+            const activeTab = button.id.replace('-tab', '');
+            document.getElementById(activeTab).classList.remove('hidden');
+            if (activeTab === 'dashboard') fetchAttendanceStats();
+            if (activeTab === 'students') fetchStudents();
         });
     });
+
+    fetchAttendanceStats();
 });
-
-async function loadDashboardData() {
-    try {
-        const [statsRes, studentsRes, teachersRes] = await Promise.all([
-            fetch('/api/attendance/stats'),
-            fetch('/api/students'),
-            fetch('/api/teachers')
-        ]);
-
-        if (!statsRes.ok || !studentsRes.ok || !teachersRes.ok) {
-            throw new Error('Failed to fetch data');
-        }
-
-        const stats = await statsRes.json();
-        const students = await studentsRes.json();
-        const teachers = await teachersRes.json();
-
-        document.getElementById('totalRecords').innerText = stats.totalRecords;
-        document.getElementById('presentCount').innerText = stats.presentCount;
-        document.getElementById('absentCount').innerText = stats.absentCount;
-        document.getElementById('attendanceRate').innerText = stats.attendanceRate + '%';
-    } catch (error) {
-        console.error('Error loading dashboard data:', error);
-        alert('Failed to load dashboard data.');
-    }
-}

@@ -1,25 +1,26 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { connectDB } = require('./db');
-const studentsRoutes = require('./routes/students');
-const attendanceRoutes = require('./routes/attendance');
-const reportsRoutes = require('./routes/reports');
-const teachersRoutes = require('./routes/teachers');
+const studentsRoute = require('./routes/students');
+const attendanceRoute = require('./routes/attendance');
+const reportsRoute = require('./routes/reports');
+const teachersRoute = require('./routes/teachers');
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
+
 connectDB();
 
-app.use('/api/students', studentsRoutes);
-app.use('/api/attendance', attendanceRoutes);
-app.use('/api/reports', reportsRoutes);
-app.use('/api/teachers', teachersRoutes);
+app.use('/api/students', studentsRoute);
+app.use('/api/attendance', attendanceRoute);
+app.use('/api/reports', reportsRoute);
+app.use('/api/teachers', teachersRoute);
 
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+    res.json({ status: 'ok', timestamp: new Date() });
 });
 
 app.use(express.static(path.join(__dirname, 'public')));

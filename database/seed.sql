@@ -1,18 +1,26 @@
-INSERT INTO books (isbn, title, author, category, status) VALUES
-('978-3-16-148410-0', 'The Great Gatsby', 'F. Scott Fitzgerald', 'Classic', 'Available'),
-('978-1-56619-909-4', '1984', 'George Orwell', 'Dystopian', 'Available'),
-('978-0-7432-7356-5', 'To Kill a Mockingbird', 'Harper Lee', 'Classic', 'Issued'),
-('978-0-452-28423-4', 'Moby Dick', 'Herman Melville', 'Adventure', 'Available'),
-('978-0-06-112008-4', 'Pride and Prejudice', 'Jane Austen', 'Romance', 'Available');
+-- INSERT statements for users
+INSERT INTO public.users (username, password, role) VALUES
+('teacher1', 'pass123', 'Teacher'),
+('student1', 'pass123', 'Student'),
+('student2', 'pass123', 'Student'),
+('student3', 'pass123', 'Student'),
+('admin1', 'pass123', 'Admin');
 
-INSERT INTO members (name, email, phone) VALUES
-('Alice Johnson', 'alice@example.com', '555-1234'),
-('Bob Smith', 'bob@example.com', '555-5678'),
-('Carol White', 'carol@example.com', '555-8765'),
-('Dave Brown', 'dave@example.com', '555-4321'),
-('Eve Davis', 'eve@example.com', '555-0987');
+-- INSERT statements for classes
+INSERT INTO public.classes (class_name, teacher_id) VALUES
+('Math', 1),
+('Science', 1),
+('History', 1);
 
-INSERT INTO issued_books (member_id, isbn, issue_date, due_date) VALUES
-(1, '978-3-16-148410-0', '2023-10-01', '2023-10-15'),
-(2, '978-1-56619-909-4', '2023-10-01', '2023-10-15'),
-(3, '978-0-7432-7356-5', '2023-10-01', '2023-10-15');
+-- INSERT statements for attendance
+INSERT INTO public.attendance (user_id, class_id, date, status) VALUES
+(2, 1, '2023-10-01', 'Present'),
+(2, 1, '2023-10-02', 'Absent'),
+(3, 1, '2023-10-01', 'Present'),
+(3, 1, '2023-10-02', 'Present'),
+(2, 2, '2023-10-01', 'Absent');
+
+-- INSERT statements for reports
+INSERT INTO public.reports (student_id, month, report_data) VALUES
+(2, '2023-10-01', '{"attendance": [{"date": "2023-10-01", "status": "Absent"}]}'),
+(3, '2023-10-01', '{"attendance": [{"date": "2023-10-01", "status": "Present"}]}');

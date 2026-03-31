@@ -1,43 +1,28 @@
 const express = require('express');
-const { pool } = require('../db');
 const router = express.Router();
+const { pool } = require('../db');
 
-// GET /api/attendance - List all attendance records
-router.get('/', async (req, res, next) => {
-    try {
-        const result = await pool.query('SELECT * FROM attendance;');
-        res.json(result.rows);
-    } catch (err) {
-        next(err);
-    }
-});
-
-// GET /api/attendance/stats - Get attendance statistics
+// GET /api/attendance/stats
 router.get('/stats', async (req, res, next) => {
     try {
-        const totalRecords = await pool.query('SELECT COUNT(*) FROM attendance;');
-        const presentCount = await pool.query('SELECT COUNT(*) FROM attendance WHERE status = \'present\';');
-        const absentCount = await pool.query('SELECT COUNT(*) FROM attendance WHERE status = \'absent\';');
-        const attendanceRate = (presentCount.rows[0].count / totalRecords.rows[0].count) * 100;
-
-        res.json({
-            totalRecords: totalRecords.rows[0].count,
-            presentCount: presentCount.rows[0].count,
-            absentCount: absentCount.rows[0].count,
-            attendanceRate: attendanceRate.toFixed(2)
-        });
+        const result = await pool.query(`SELECT COUNT(*) AS totalRecords, 
+                                                      SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) AS presentCount, 
+                                                      SUM(CASE WHEN status = 'Absent' THEN 1 ELSE 0 END) AS absentCount, 
+                                                      (SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS attendanceRate 
+                                               FROM attendance`);
+        res.json(result.rows[0]);
     } catch (err) {
         next(err);
     }
 });
 
-// GET /api/attendance/:id - Get attendance by student ID
+// GET /api/attendance/:id
 router.get('/:id', async (req, res, next) => {
-    const { id } = req.params;
     try {
-        const result = await pool.query('SELECT * FROM attendance WHERE student_id = $1;', [id]);
+        const { id } = req.params;
+        const result = await pool.query(`SELECT * FROM attendance WHERE attendance_id = $1`, [id]);
         if (result.rows.length === 0) {
-            return res.status(404).json({ message: 'Attendance record not found' });
+            return res.status(404).json({ error: 'Attendance record not found' });
         }
         res.json(result.rows[0]);
     } catch (err) {
@@ -45,29 +30,30 @@ router.get('/:id', async (req, res, next) => {
     }
 });
 
-// POST /api/attendance - Create a new attendance record
+// POST /api/attendance
 router.post('/', async (req, res, next) => {
-    const { student_id, status } = req.body;
-    if (!student_id || !status) {
-        return res.status(400).json({ message: 'Missing fields' });
+    const { user_id, class_id, date, status } = req.body;
+    if (!user_id || !class_id || !date || !status) {
+        return res.status(400).json({ error: 'Missing fields' });
     }
     try {
-        const result = await pool.query('INSERT INTO attendance (student_id, status) VALUES ($1, $2) RETURNING *;', [student_id, status]);
+        const result = await pool.query(`INSERT INTO attendance (user_id, class_id, date, status) 
+                                           VALUES ($1, $2, $3, $4) RETURNING *`, [user_id, class_id, date, status]);
         res.status(201).json(result.rows[0]);
     } catch (err) {
         next(err);
     }
 });
 
-// DELETE /api/attendance/:id - Delete attendance by ID
+// DELETE /api/attendance/:id
 router.delete('/:id', async (req, res, next) => {
-    const { id } = req.params;
     try {
-        const result = await pool.query('DELETE FROM attendance WHERE id = $1 RETURNING *;', [id]);
-        if (result.rowCount === 0) {
-            return res.status(404).json({ message: 'Attendance record not found' });
+        const { id } = req.params;
+        const result = await pool.query(`DELETE FROM attendance WHERE attendance_id = $1 RETURNING *`, [id]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Attendance record not found' });
         }
-        res.json({ message: 'Attendance record deleted successfully' });
+        res.json({ message: 'Attendance record deleted' });
     } catch (err) {
         next(err);
     }
